@@ -1,8 +1,10 @@
 
 import os.path
 import sqlite3
+#from reddit_submission import Submission
+#from secret import REDDIT_USER_AGENT
+#from reddit_submission import Submission
 
-from reddit_submission import Submission
 
 __author__ = 'kyedidi'
 
@@ -23,14 +25,20 @@ class DatabaseManager:
   def query(self, query):
     c = self.conn.cursor()
     c.execute(query)
-    return c.fetchall()
+    # return c.fetchall()
+    while True:
+      rows = c.fetchmany()
+      if not rows:
+        break
+      for row in rows:
+          yield row
 
   def replace_submission(self, submission):
     """ This is a seprate function because this is dangerous"""
     c = self.conn.cursor()
     # print submission.to_tuple()
     c.execute("INSERT OR REPLACE INTO submissions VALUES ("
-              "?, ?, ?, ?, ?, ?, ?, ?, ?)",
+              "?, ?, ?, ?, ?, ?, ?, ?)",
               submission.to_tuple())
     self.conn.commit()
     self.rows_written += 1
@@ -40,12 +48,13 @@ class DatabaseManager:
     # Insert a row of data
     if self.row_exists(submission.id):
       print "Submission with id =", submission.id, "already exists."
+      print "Something is wrong in the code. This message should not print."
       return
     self.new_rows_written += 1
     self.replace_submission(submission)
 
-
   def row_exists(self, row_id):
+    assert(isinstance(row_id, int))
     c = self.conn.cursor()
     self.already_exist += 1
     # print "checking for row_id = ", row_id
@@ -60,15 +69,14 @@ class DatabaseManager:
     c = self.conn.cursor()
     c.execute("""
     CREATE TABLE "submissions" (
-      "id" text NOT NULL,
-      "title" text NOT NULL,
-      "score" integer NOT NULL,
-      "adult_content" integer NOT NULL,
-      "author" text NOT NULL,
-      "created" integer NOT NULL,
-      "subreddit" text NOT NULL,
-      "url" text NOT NULL,
-      "permalink" text NOT NULL,
+      "id" integer NOT NULL,
+      "disabled" integer NOT NULL,
+      "title" text,
+      "score" integer,
+      "adult_content" integer,
+      "created" integer,
+      "subreddit" text,
+      "permalink" text,
       PRIMARY KEY("id")
     );
     """)

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reddit Fast Search</title>
+    <!-- TODO: make the socket.io.js file static. -->
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Using Yahoo Auto Complete -->
+    <script src="http://yui.yahooapis.com/3.14.1/build/yui/yui-min.js"></script>
+
+    <!-- Bootstrap 3
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    -->
+
+    <script src="client.js"></script>
+    <style type="text/css">
+        .yui3-aclist-content{
+            font-family: Arial;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="demo" class="yui3-skin-sam"> <!-- You need this skin class -->
+  <label for="ac-input" style="color:white; font-family: Arial; font-weight: bold; background-color: #990000;font-size: 1.5em;">Reddit Fast Search</label>&nbsp;&nbsp;
+  <input id="ac-input" type="text" autofocus="autofocus" style="font-size: 25px;" size="50">
+</div>
+
+</body>
+</html>

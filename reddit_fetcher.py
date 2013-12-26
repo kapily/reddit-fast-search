@@ -6,8 +6,9 @@ from reddit_database_manager import DatabaseManager
 from pprint import pprint
 import time
 from secret import REDDIT_USER_AGENT
-from search_terms import search_terms
+from search_terms import search_terms_for_reddit
 from search_subreddits import subreddits
+from base36 import base36decode
 
 # For PRAW Documentation:
 # https://praw.readthedocs.org/en/latest/pages/code_overview.html
@@ -23,18 +24,22 @@ class RedditFetcher:
 
   def __update_given_submissions(self, submissions):
     for submission in submissions:
-      if not self.db_manager.row_exists(submission.id):
+      submission_id = base36decode(submission.id)
+      if not self.db_manager.row_exists(submission_id):
         s = Submission.from_reddit_api(submission)
         self.db_manager.insert_submission(s)
       else:
         # if submission does exist, update its score
         new_submission = Submission.from_reddit_api(submission)
         # existing_submission =
-        query = 'SELECT * FROM submissions WHERE id = "%s";' % submission.id
-        existing_submissions = [Submission(x) for x in m.query(query)]
+        query = 'SELECT * FROM submissions WHERE id = %d;' % submission_id
+        existing_submissions = [Submission(x) for x in self.db_manager.query(query)]
         assert(len(existing_submissions) == 1)
         existing_submission = existing_submissions[0]
+        #print "existing score: ", existing_submission.score
+        #print "new score: ", new_submission.score
         if existing_submission.score != new_submission.score:
+          #print "going to replace old submission!"
           #print "NEW_SUBMISSION: ", new_submission.to_tuple()
           #print "BEFORE: ", existing_submission.to_tuple()
           existing_submission.score = new_submission.score
@@ -43,7 +48,7 @@ class RedditFetcher:
           self.db_manager.replace_submission(existing_submission)
 
       # Debug printing:
-      if self.db_manager.new_rows_written % 100 == 0:
+      if self.db_manager.new_rows_written % 100 == 0 and self.db_manager.new_rows_written != 0:
           print "Entries written so far: ", self.db_manager.new_rows_written, " [", self.db_manager.rows_written, " total]"
 
   def update_subreddit(self, subreddit):
@@ -68,6 +73,10 @@ class RedditFetcher:
     self.__update_given_submissions(submissions)
     print "Added", self.db_manager.new_rows_written, "new entries after get_subreddit (get_top) [", self.db_manager.rows_written, "total]"
 
+    search_terms = []
+    search_terms.extend(search_terms_for_reddit['all'])
+    if subreddit in search_terms_for_reddit:
+        search_terms.extend(search_terms_for_reddit[subreddit])
 
     for search_term in search_terms:
       submissions = self.r.search(search_term, subreddit, 'new', None, 'all')
@@ -88,7 +97,7 @@ class RedditFetcher:
 
   def update_posts(self):
     #submissions = r.get_subreddit('python').get_top(limit=10)
-    # Other potential: LifeProTips, TodayILearned, AskWomen, AskMen
+
     for subreddit in subreddits:
       self.update_subreddit(subreddit)
 
