@@ -30,6 +30,7 @@ $(document).ready(function() {
       return;
     }
 
+    console.log("Setting new results.");
     resultsCallback(data.results);
     // check currentQuery
     // socket.emit('user_query_changed', { my: 'data' });
@@ -47,8 +48,8 @@ $(document).ready(function() {
   // Put Yahoo load inside Jquery??
   YUI().use('autocomplete', 'autocomplete-filters', 'autocomplete-highlighters', function (Y) {
     Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
-      resultFilters    : 'startsWith',
-      resultHighlighter: 'startsWith',
+      resultFilters    : 'phraseMatch',
+      resultHighlighter: 'phraseMatch',
       activateFirstItem: true,
       source           : function (query, callback) {
         console.log("Source is being called.");
