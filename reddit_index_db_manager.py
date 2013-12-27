@@ -2,8 +2,7 @@
 import os.path
 import sqlite3
 import ujson
-
-from operator import itemgetter
+import operator
 
 __author__ = 'kyedidi'
 
@@ -66,12 +65,16 @@ class IndexDatabaseManager:
   def insert_word(self, word, submission_id, score):
     # Insert word along with the submission id it is found in
     # Insert a row of data
-    submission_ids = {}
+    submission_ids = []
     if self.row_exists(word):
       submission_ids = ujson.loads(self.get_entry(word)[1])  # we use [1] because that's the value
-    submission_ids[submission_id] = score
+      submission_ids = [(x[0], x[1]) for x in submission_ids]
+    submission_ids.append((submission_id, score))
+    submission_ids = list(set(submission_ids))
+    submission_ids.sort(key=operator.itemgetter(1), reverse=True)
+    #print "about to serialize: ", submission_ids
     submission_ids = ujson.dumps(submission_ids)
-    # print "about to write: ", submission_ids
+    #print "about to write: ", submission_ids
     self.new_rows_written += 1
     self.replace_submission(word, submission_ids)
 

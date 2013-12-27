@@ -1,4 +1,4 @@
-Starting python web server in current directory:
+Starting python web server in "webserver" directory:
 sudo python -m SimpleHTTPServer 80
 
 Start nodejs server in current directory:

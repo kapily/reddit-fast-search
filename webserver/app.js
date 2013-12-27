@@ -53,17 +53,24 @@ function get_type(thing){
 }
 
 // If one of the objects is null, returns the other object
-function IntersectTwoObjects(o1, o2) {
-  if (o1 == null) return o2;
-  if (o2 == null) return o1;
 
+function IntersectTwoArrays(a1, a2) {
+  if (a1 == null) return a2;
+  if (a2 == null) return a1;
+
+  // TODO: need to actually complete this logic
+
+  return null;
+  /*
   var smallest_object = (_.size(o1) < _.size(o2)) ? o1 : o2;
   var largest_object = (smallest_object == o2) ? o1: o2;
 
   var output = {};
   _.forEach(smallest_object, function(val, key) { if (key in largest_object) {output[key] = val;} });
   return output;
+  */
 }
+
 
 io.sockets.on('connection', function (socket) {
   // socket.emit('news', { hello: 'world' });
@@ -115,25 +122,32 @@ io.sockets.on('connection', function (socket) {
       // Get a list of the possible words it could be
       var possible_words = dbTrie.find(incomplete_word);
       console.log("possible words: " + JSON.stringify(possible_words));
-      var possible_suggestions = {};
+      var possible_suggestions = [];
       _.each(possible_words, function(possible_word){_.extend(possible_suggestions, dbWordToIdObj[possible_word])});
-      // console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
-      completed_word_ids = IntersectTwoObjects(completed_word_ids, possible_suggestions);
+      console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
+
+      completed_word_ids = IntersectTwoArrays(completed_word_ids, possible_suggestions);
       console.log("After incomplete word, completed_word_ids = " + JSON.stringify(completed_word_ids));
     }
 
-    var completed_word_ids_arr = _.map(completed_word_ids, function(val, key) {
+    /*
+    var completed_word_ids_arr = _.map(completed_word_ids, function(elem) {
+      var key = elem[0];
+      var val = elem[1]
       return [key, val];
     });
+    */
 
-    var completed_word_ids_arr_sorted = _.sortBy(completed_word_ids_arr, function(obj){
+    /*
+    var completed_word_ids_arr_sorted = _.sortBy(completed_word_ids, function(obj){
       var score = obj[1];
       return score * -1;  // multiply by -1 to get reverse sort
     });
     console.log('completed_word_ids_arr_sorted: ' + JSON.stringify(completed_word_ids_arr_sorted));
+    */
 
     // TODO: sort these the array by the value in the objects
-    var results = _.map(completed_word_ids_arr_sorted, function(obj) {
+    var results = _.map(completed_word_ids, function(obj) {
       var key = obj[0];
       var val = obj[1];
       // lookup the key and link
@@ -145,7 +159,7 @@ io.sockets.on('connection', function (socket) {
     });
     // console.log('Results: ' + JSON.stringify(results));
     results = results.slice(0, Math.min(7, results.length));  // max 7 results
-
+    console.log('Results (limited to 7) : ' + JSON.stringify(results));
     // TODO: need to sort the results based on the score of the objects
     // TODO: need to limit results to 5 or so
 
