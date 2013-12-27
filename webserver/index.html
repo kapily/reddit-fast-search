@@ -3,6 +3,7 @@
 <head>
     <title>Reddit Fast Search</title>
     <!-- TODO: make the socket.io.js file static. -->
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <script src="http://localhost:8080/socket.io/socket.io.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
@@ -25,11 +26,10 @@
 
 </head>
 <body>
-
-<div id="demo" class="yui3-skin-sam"> <!-- You need this skin class -->
-  <label for="ac-input" style="color:white; font-family: Arial; font-weight: bold; background-color: #990000;font-size: 1.5em;">Reddit Fast Search</label>&nbsp;&nbsp;
-  <input id="ac-input" type="text" autofocus="autofocus" style="font-size: 25px;" size="50">
-</div>
+        <div id="search_container" class="yui3-skin-sam"> <!-- You need this skin class -->
+          <!--<label for="ac-input" style="color:white; font-family: Arial; font-weight: bold; background-color: #990000;font-size: 1.5em;">Reddit Fast Search</label>&nbsp;&nbsp;-->
+            <input id="ac-input" type="text" autofocus="autofocus">
+        </div>
 
 </body>
 </html>

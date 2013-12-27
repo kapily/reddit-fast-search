@@ -1,0 +1,25 @@
+html {
+	padding:0;
+	margin:0;
+}
+
+body {
+	padding:0;
+	margin:0;
+}
+
+#search_container {
+	position: absolute;
+	top:40%;
+	width:100%;
+}
+
+#ac-input {
+	display: block;
+	position: relative;
+    margin : 0 auto;
+	font-size: 25px; 
+	width: 70%;
+	min-width: 500px;
+	max-width: 700px;
+}
