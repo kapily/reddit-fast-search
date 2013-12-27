@@ -66,22 +66,12 @@ class IndexDatabaseManager:
   def insert_word(self, word, submission_id, score):
     # Insert word along with the submission id it is found in
     # Insert a row of data
-    submission_ids = None
+    submission_ids = {}
     if self.row_exists(word):
-      # Append to list, resort set(list)
-      submission_ids = [tuple(x) for x in ujson.loads(self.get_entry(word)[1])]
-      submission_ids.append((submission_id, score))
-      #print submission_ids
-      submission_ids = set(submission_ids)
-      submission_ids = list(submission_ids)
-      submission_ids = sorted(submission_ids, key=itemgetter(1))
-      #print "existing submission_ids: ", submission_ids
-    else:
-      # Create new entry
-      submission_ids = []
-      submission_ids.append((submission_id, score))
+      submission_ids = ujson.loads(self.get_entry(word)[1])  # we use [1] because that's the value
+    submission_ids[submission_id] = score
     submission_ids = ujson.dumps(submission_ids)
-    #print "about to write: ", submission_ids
+    # print "about to write: ", submission_ids
     self.new_rows_written += 1
     self.replace_submission(word, submission_ids)
 

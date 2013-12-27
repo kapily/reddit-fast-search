@@ -31,7 +31,24 @@ $(document).ready(function() {
     }
 
     console.log("Setting new results.");
-    resultsCallback(data.results);
+    //var anotherResultString = [];
+    var resultStrings = _.map(data.results, function(elem){
+      var title = elem[0];
+      var url = elem[1];  // TODO: use url later
+      // While I am using a _.each below, it always only has one iteration:
+      // there is just one key and value.
+      //anotherResultString.push(title);
+      return title;
+
+      // return elem.title;
+    });
+    console.log("resultStrings: " + JSON.stringify(resultStrings));
+    //console.log("anotherResultString: " + JSON.stringify(anotherResultString));
+    if (!resultStrings) {
+      resultStrings = [];
+    }
+    console.log("resultStrings: " + resultStrings);
+    resultsCallback(resultStrings);
     // check currentQuery
     // socket.emit('user_query_changed', { my: 'data' });
   });

@@ -1,0 +1,8 @@
+.idea
+*.sqlite
+*.pyc
+webserver/node_modules/*
+secret.py
+all_subreddits.py
+search_subreddits.py
+search_terms.py
