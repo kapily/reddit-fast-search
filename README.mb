@@ -1,0 +1,11 @@
+Starting python web server in current directory:
+sudo python -m SimpleHTTPServer 80
+
+Start nodejs server in current directory:
+node app.js
+
+use npm to download the following modules (eg. npm install sqlite):
+lodash
+socket.io
+sqlite3
+triejs
