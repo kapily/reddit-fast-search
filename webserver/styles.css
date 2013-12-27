@@ -6,11 +6,29 @@ html {
 body {
 	padding:0;
 	margin:0;
+	background-color: #F6F5F1;
 }
 
-#search_container {
+#logo {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+#logo #title {
+	font-family: 'Fugaz One', Arial, sans-serif;
+	font-size: 2.5em;
+}
+
+#logo #tagline {
+	font-family: Arial, sans-serif;
+	font-style:italic;
+	font-size: 1em;
+	color:#919191;
+}
+
+#content {
 	position: absolute;
-	top:40%;
+	top:30%;
 	width:100%;
 }
 
@@ -22,4 +40,9 @@ body {
 	width: 70%;
 	min-width: 500px;
 	max-width: 700px;
+}
+
+#go_arrow {
+	cursor: pointer;
+	height: 1.5em;
 }
