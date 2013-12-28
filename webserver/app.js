@@ -240,7 +240,7 @@ io.sockets.on('connection', function (socket) {
     var query = data.query;
 
     console.log("--------------------------------------------------------------------");
-    console.log("Received query: " + query);
+    // console.log("Received query: " + query);
 
     // split the query into completed words and incomplete word
     if (!query || query == "") {
@@ -285,18 +285,18 @@ io.sockets.on('connection', function (socket) {
 
 
 
-      console.log("possible words: " + JSON.stringify(possible_words));
+      // console.log("possible words: " + JSON.stringify(possible_words));
       var possible_suggestions = [];
       _.each(possible_words, function(possible_word){
         // We insert into sorted order each time
         possible_suggestions = ExtendSortedArrays(dbWordToIdObj[possible_word], possible_suggestions);
         // _.extend(possible_suggestions, dbWordToIdObj[possible_word])
       });
-      console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
-      console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
+      // console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
+      // console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
 
       completed_word_ids = IntersectSortedArrays(completed_word_ids, possible_suggestions, Infinity);
-      console.log("After Intersection = " + JSON.stringify(completed_word_ids));
+      // console.log("After Intersection = " + JSON.stringify(completed_word_ids));
     }
 
     /*
