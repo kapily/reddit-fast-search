@@ -29,7 +29,7 @@ function RepositionSearch() {
 	
 	// Move search to top
 	$("#search_content").animate({ 
-        top: "-30px",
+        top: "-40px",
     }, 120, function() {
     	$("#results_content").css("display", "block");
     	$("#results_content").fadeTo(200, 1);
@@ -42,8 +42,12 @@ function PopulateResults(result) {
 	var title = result.raw;
 
 	$("#results_content").fadeTo(200, 0, function() {
-		$("#post_title").text(title); // replace with what was selected
+		$("#post_title").text(title);
 		$("#results_content").fadeTo(200, 1);
+		
+		// Swith input to Placeholder
+		$('#ac-input').attr("placeholder", title);
+		$("#ac-input").val('');
 		$('#ac-input').blur();
 	});
 	

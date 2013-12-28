@@ -72,6 +72,21 @@ body {
 	font-size: 2.5em;
 }
 
+.comment_area {
+	background-color: #086496;
+	margin-top:50px;
+	width: 100%;
+	font-family: 'Lato', sans-serif;
+	font-size: 1.1em;
+	padding:30px;
+	color:#FFF;
+	border-radius:15px;
+
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
 ::-webkit-input-placeholder { /* WebKit browsers */
     color:    #CECECE;
 }
