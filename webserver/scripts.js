@@ -23,8 +23,8 @@ function ShowResults(result) {
 
 function RepositionSearch() {
 	// Fade out logo
-	$( "#logo" ).fadeTo(100 , 0, function() {
-		$("#logo").css("visibility","hidden");
+	$( "#logo_center" ).fadeTo(100 , 0, function() {
+		$("#logo_center").css("visibility","hidden");
 	});
 	
 	// Move search to top
