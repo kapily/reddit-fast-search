@@ -43,12 +43,12 @@ $(document).ready(function() {
 
       // return elem.title;
     });
-    console.log("resultStrings: " + JSON.stringify(resultStrings));
+    //
     //console.log("anotherResultString: " + JSON.stringify(anotherResultString));
     if (!resultStrings) {
       resultStrings = [];
     }
-    console.log("resultStrings: " + resultStrings);
+    console.log("resultStrings: " + JSON.stringify(resultStrings));
     resultsCallback(resultStrings);
     // check currentQuery
     // socket.emit('user_query_changed', { my: 'data' });
@@ -66,8 +66,8 @@ $(document).ready(function() {
   // Put Yahoo load inside Jquery??
   YUI().use('autocomplete', 'autocomplete-filters', 'autocomplete-highlighters', function (Y) {
     Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
-      resultFilters    : 'phraseMatch',
-      resultHighlighter: 'phraseMatch',
+      resultFilters    : 'subWordMatch',
+      resultHighlighter: 'subWordMatch',
       activateFirstItem: true,
       source           : function (query, callback) {
         console.log("Source is being called.");

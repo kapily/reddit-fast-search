@@ -71,7 +71,8 @@ class IndexDatabaseManager:
       submission_ids = [(x[0], x[1]) for x in submission_ids]
     submission_ids.append((submission_id, score))
     submission_ids = list(set(submission_ids))
-    submission_ids.sort(key=operator.itemgetter(1), reverse=True)
+    submission_ids.sort(key=operator.itemgetter(1, 0), reverse=True)
+    # submission_ids.sort(key = lambda y: (y[1], -y[2]))
     #print "about to serialize: ", submission_ids
     submission_ids = ujson.dumps(submission_ids)
     #print "about to write: ", submission_ids

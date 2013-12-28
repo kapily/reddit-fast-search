@@ -9,11 +9,29 @@
 var io = require('socket.io').listen(8080);
 io.set('log level', 1); // reduce logging
 var sqlite3 = require('sqlite3').verbose();
-var Triejs = require('triejs');
+// var Triejs = require('triejs');
 var _ = require('lodash');
 
 
-var dbTrie = new Triejs();  // trie of all the words in the corpus (possible optimization: make this client-side)
+
+// Hack to include trie for now
+// http://stackoverflow.com/questions/5797852/in-node-js-how-do-i-include-functions-from-my-other-files
+
+var fs = require('fs');
+// trie-knuth.js:
+// https://raw.github.com/mikedeboer/trie/master/trie.js
+//eval(fs.readFileSync('trie-knuth.js')+'');
+// http://odhyan.com/blog/2010/11/trie-implementation-in-javascript/
+eval(fs.readFileSync('trie.js')+'');
+// file is included here:
+
+
+
+var RESULT_LIMIT_SIZE = 7;
+
+
+// var dbTrie = new Triejs();  // trie of all the words in the corpus (possible optimization: make this client-side)
+var dbTrie = new Trie();
 var dbIdToSubmissionInfo = {};  // {'id' : ['Title of Reddit Submission', url], 'id2' : ['...'] }
 var dbWordToIdObj = {};  // {'word': {'id1' : 42, 'id2' : 93}, 'word2' : {...} }
 
@@ -24,7 +42,8 @@ db.serialize(function() {
     var word = row.word;
     // console.log(row.word + ". ");
     // TODO: add this to redis
-    dbTrie.add(word);
+    // dbTrie.add(word);
+    dbTrie.insert(word);
 
     // submission_ids
     var submissionIdObj = JSON.parse(row.submission_ids);
@@ -54,13 +73,153 @@ function get_type(thing){
 
 // If one of the objects is null, returns the other object
 
-function IntersectTwoArrays(a1, a2) {
+function ExtendSortedArrays(a1, a2) {
   if (a1 == null) return a2;
   if (a2 == null) return a1;
 
-  // TODO: need to actually complete this logic
+  var result = [];
+  var a1_pointer = 0;
+  var a2_pointer = 0;
+  // Loop until both of the array pointer falls off the end
+  while (a1_pointer < a1.length || a2_pointer < a2.length) {
 
-  return null;
+    /* Begin handling case where one of those pointers is off the edge */
+    if (a1_pointer == a1.length) {
+      result.push(a2[a2_pointer]);
+      a2_pointer++;
+      continue;
+    }
+    if (a2_pointer == a2.length) {
+      result.push(a1[a1_pointer]);
+      a1_pointer++;
+      continue;
+    }
+    /* End handling case where one of those pointers is off the edge */
+
+    var a1_obj = a1[a1_pointer];
+    var a2_obj = a2[a2_pointer];
+    //console.error("a1_pointer: " + a1_pointer + "| obj: " | a1_obj);
+    //console.error("a2_pointer: " + a2_pointer + "| obj: " | a2_obj);
+    var a1_id = a1_obj[0];
+    var a2_id = a2_obj[0];
+    var a1_score = a1_obj[1];
+    var a2_score = a2_obj[1];
+
+    /* End copy over the remaining entries when one array is done */
+
+    // Scores are stored in decrementing order. If score of a1 > a2,
+    // then it means we need to advance a1 to find lower scores
+    if (a1_score > a2_score) {
+      result.push(a1_obj);
+      a1_pointer++;
+      continue;
+    }
+    if (a1_score < a2_score) {
+      result.push(a2_obj);
+      a2_pointer++;
+      continue;
+    }
+
+    // If execution comes here it means that a1_score == a2_score
+    // Now, check to see that the submission is the same:
+    //console.log("a1_score: " + a1_score);
+    //console.log("a2_score: " + a2_score);
+    if (a1_score != a2_score) {
+      throw "a1_score != a2_score";
+    }
+    if (a1_id > a2_id) {
+      result.push(a1_obj);
+      a1_pointer++;
+    } else if (a1_id < a2_id) {
+      result.push(a2_obj);
+      a2_pointer++;
+    } else if (a1_id == a2_id) {
+      // both contain the same object, so we keep only one
+      result.push(a1_obj);
+      a1_pointer++;
+      a2_pointer++;
+    }
+    continue;
+
+  }
+  return result;
+
+}
+
+// Input submissions sorted by their score.
+// Limit = number of entries before we return a result. (termiate quickly)
+// Arrays look like: [["32442", 4], ...]
+// Arrays are sorted two ways: first by the score, and then by the id(largest first)
+// Sorting by id has the side-effect of sorting by most recent score
+// Max runtime O(len(a1) + len(a2))
+function IntersectSortedArrays(a1, a2, limit) {
+  if (a1 == null) return a2;
+  if (a2 == null) return a1;
+
+  //console.log("Trying to intersect (a1): " + JSON.stringify(a1));
+  //console.log("Trying to intersect (a2): " + JSON.stringify(a2));
+
+  // TODO: need to actually complete this logic
+  var result = [];
+  var a1_pointer = 0;
+  var a2_pointer = 0;
+  // Loop until one of the array pointer falls off the end
+  var entries_stored = 0;
+  while (a1_pointer < a1.length && a2_pointer < a2.length) {
+
+    // We only want to intersect until we hit the imit
+    if (entries_stored >= limit) {
+      return result;
+    }
+
+    var a1_obj = a1[a1_pointer];
+    var a2_obj = a2[a2_pointer];
+    var a1_id = a1_obj[0];
+    var a2_id = a2_obj[0];
+    var a1_score = a1_obj[1];
+    var a2_score = a2_obj[1];
+
+    // console.log("Checking a1: " + JSON.stringify(a1_obj) + " vs a2: " + JSON.stringify(a2_obj));
+
+    // Scores are stored in decrementing order. If score of a1 > a2,
+    // then it means we need to advance a1 to find lower scores
+    if (a1_score > a2_score) {
+      a1_pointer++;
+      continue;
+    }
+    if (a1_score < a2_score) {
+      a2_pointer++;
+      continue;
+    }
+
+    // If execution comes here it means that a1_score == a2_score
+    // Now, check to see that the submission is the same:
+    if (a1_id == a2_id) {
+      result.push(a1_obj);
+      entries_stored++;
+      a1_pointer++;
+      a2_pointer++;
+      continue;
+    }
+
+    // If the id's are not equal to one another
+    // This code is pretty identical to the score checking code because
+    // both have values stored in descending order
+    if (a1_id > a2_id) {
+      a1_pointer++;
+      continue;
+    }
+    if (a2_id > a1_id) {
+      a2_pointer++;
+      continue;
+    }
+
+    // if
+    // Neeed to advance one of the pointers
+  }
+  return result;
+
+  // return null;
   /*
   var smallest_object = (_.size(o1) < _.size(o2)) ? o1 : o2;
   var largest_object = (smallest_object == o2) ? o1: o2;
@@ -107,7 +266,7 @@ io.sockets.on('connection', function (socket) {
     if (completed_words.length > 0) {
       for (var i = 0; i < completed_words.length; i++) {
         // TODO: need to intersect, NOT extend
-        completed_word_ids = IntersectTwoObjects(completed_word_ids, dbWordToIdObj[completed_words[i]]);
+        completed_word_ids = IntersectSortedArrays(completed_word_ids, dbWordToIdObj[completed_words[i]], Infinity);
         //console.log("completed_words.length: " + completed_words.length);
         //console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
       }
@@ -117,17 +276,27 @@ io.sockets.on('connection', function (socket) {
 
 
     if (incomplete_word) {
-      console.log("Before incomplete word, completed_word_ids = " + JSON.stringify(completed_word_ids));
+      //console.log("Before incomplete word, completed_word_ids = " + JSON.stringify(completed_word_ids));
       // Modify the results
       // Get a list of the possible words it could be
-      var possible_words = dbTrie.find(incomplete_word);
+      // var possible_words = dbTrie.find(incomplete_word);
+      var possible_words = dbTrie.autoComplete(incomplete_word);
+      // TODO: LOTS of room for improvement. Do NOT need to traverse the entire list of possible_words
+
+
+
       console.log("possible words: " + JSON.stringify(possible_words));
       var possible_suggestions = [];
-      _.each(possible_words, function(possible_word){_.extend(possible_suggestions, dbWordToIdObj[possible_word])});
+      _.each(possible_words, function(possible_word){
+        // We insert into sorted order each time
+        possible_suggestions = ExtendSortedArrays(dbWordToIdObj[possible_word], possible_suggestions);
+        // _.extend(possible_suggestions, dbWordToIdObj[possible_word])
+      });
       console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
+      console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
 
-      completed_word_ids = IntersectTwoArrays(completed_word_ids, possible_suggestions);
-      console.log("After incomplete word, completed_word_ids = " + JSON.stringify(completed_word_ids));
+      completed_word_ids = IntersectSortedArrays(completed_word_ids, possible_suggestions, Infinity);
+      console.log("After Intersection = " + JSON.stringify(completed_word_ids));
     }
 
     /*
