@@ -4,6 +4,7 @@ var socket = null;
 var currentQuery = null;
 var resultsCallback = null;
 var socket = null;
+var resultStrings;
 
 $(document).ready(function() {
 
@@ -32,7 +33,7 @@ $(document).ready(function() {
 
     console.log("Setting new results.");
     //var anotherResultString = [];
-    var resultStrings = _.map(data.results, function(elem){
+    resultStrings = _.map(data.results, function(elem){
       var title = elem[0];
       var url = elem[1];  // TODO: use url later
       // While I am using a _.each below, it always only has one iteration:
