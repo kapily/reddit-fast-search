@@ -49,6 +49,7 @@ db.serialize(function() {
     var submissionIdObj = JSON.parse(row.submission_ids);
     dbWordToIdObj[row.word] = submissionIdObj;
   });
+  console.log("Finished processing dbWordToIdObj.");
 });
 db.close();
 
@@ -62,7 +63,7 @@ db.serialize(function() {
     dbIdToSubmissionInfo[id] = [title, url];
     // console.log("Row id:" + id + " has title: " + title);
   });
-  console.log("Finished processing submissions for titles.");
+  console.log("Finished processing dbIdToSubmissionInfo.");
 });
 db.close();
 
@@ -280,18 +281,27 @@ io.sockets.on('connection', function (socket) {
       // Modify the results
       // Get a list of the possible words it could be
       // var possible_words = dbTrie.find(incomplete_word);
+      console.log("Trying to get possible_words.");
       var possible_words = dbTrie.autoComplete(incomplete_word);
       // TODO: LOTS of room for improvement. Do NOT need to traverse the entire list of possible_words
-
+      console.log("Got possible_words.");
 
 
       // console.log("possible words: " + JSON.stringify(possible_words));
       var possible_suggestions = [];
-      _.each(possible_words, function(possible_word){
+      console.log("Trying to get possible_suggestions.");
+      for (var j = 0; j < possible_words.length; j++) {
+        var possible_word = possible_words[j];
+        // _.each(possible_words, function(possible_word){
         // We insert into sorted order each time
         possible_suggestions = ExtendSortedArrays(dbWordToIdObj[possible_word], possible_suggestions);
+        var current_solutions = IntersectSortedArrays(completed_word_ids, possible_suggestions, Infinity);
+        if (current_solutions.length >= RESULT_LIMIT_SIZE) {
+          break;
+        }
         // _.extend(possible_suggestions, dbWordToIdObj[possible_word])
-      });
+      }
+      console.log("Got possible_suggestions.");
       // console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
       // console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
 

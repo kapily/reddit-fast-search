@@ -21,6 +21,7 @@ class DatabaseManager:
     self.cursor = self.conn.cursor()
     if not database_exists:
       self.create_db()
+
     # At this point, the schema should be set-up
 
   def __del__(self):
@@ -71,6 +72,9 @@ class DatabaseManager:
     # Returns the newest post id from the given subreddit
     pass
 
+  # Future fields to add:
+  # self post or not
+  # number of comments
   def create_db(self):
     #c = self.conn.cursor()
     self.cursor.execute("""
