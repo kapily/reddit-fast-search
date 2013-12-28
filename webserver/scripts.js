@@ -2,12 +2,6 @@ var searchRepositioned = false;
 
 $( document ).ready(function() {
 
-	$('#ac-input').bind('keyup', function(e) {
-		if(e.keyCode==13){
-			ShowResults();
-		}
-	});
-
 	$("#ac-input").focusin(function() {
   		FadeInSearch();
 	});
@@ -22,7 +16,7 @@ function IsShowingResults() {
 	return searchRepositioned;
 }
 
-function ShowResults() {
+function ShowResults(element) {
 	PopulateResults();
 	if(!IsShowingResults()) RepositionSearch();
 }

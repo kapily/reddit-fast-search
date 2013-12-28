@@ -69,6 +69,11 @@ $(document).ready(function() {
       resultFilters    : 'subWordMatch',
       resultHighlighter: 'subWordMatch',
       activateFirstItem: true,
+      on               : {
+        select  :  function(e) {
+          ShowResults(e);
+        }
+      },
       source           : function (query, callback) {
         console.log("Source is being called.");
         currentQuery = query;
