@@ -66,3 +66,9 @@ body {
 	cursor: pointer;
 	height: 1.5em;
 }
+
+#post_title {
+	font-family: 'Lato', sans-serif;
+	font-size: 2.5em;
+}
+
