@@ -28,6 +28,15 @@ body {
 	color:#919191;
 }
 
+#top_bar {
+	position: relative;
+	top:0;
+	left:0;
+	width:100%;
+	background-color: #21252E;
+	padding-bottom: 40px;
+}
+
 #content {
 	width:70%;
 	height:100%;
@@ -73,13 +82,14 @@ body {
 }
 
 .comment_area {
-	background-color: #086496;
-	margin-top:50px;
+	/*background-color: #086496;
+	color:#FFF;
+	*/
+	margin-top:10px;
 	width: 100%;
 	font-family: 'Lato', sans-serif;
 	font-size: 1.1em;
 	padding:30px;
-	color:#FFF;
 	border-radius:15px;
 
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */

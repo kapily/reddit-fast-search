@@ -33,6 +33,10 @@ function RepositionSearch() {
     }, 120, function() {
     	$("#results_content").css("display", "block");
     	$("#results_content").fadeTo(200, 1);
+
+    	// Create border
+    	$("#search_content").css("background-color", "#21252E");
+    	$("#search_content").css("padding-bottom", "40px");
     } );
 
     searchRepositioned = true;
@@ -48,7 +52,7 @@ function PopulateResults(result) {
 		// Swith input to Placeholder
 		$('#ac-input').attr("placeholder", title);
 		$("#ac-input").val('');
-		$('#ac-input').blur();
+		//$('#ac-input').blur();
 	});
 	
 }
