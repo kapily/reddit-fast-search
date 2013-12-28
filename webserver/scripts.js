@@ -16,8 +16,8 @@ function IsShowingResults() {
 	return searchRepositioned;
 }
 
-function ShowResults(element) {
-	PopulateResults();
+function ShowResults(result) {
+	PopulateResults(result);
 	if(!IsShowingResults()) RepositionSearch();
 }
 
@@ -38,13 +38,13 @@ function RepositionSearch() {
     searchRepositioned = true;
 }
 
-function PopulateResults() {
-	$('#ac-input').attr("placeholder", resultStrings[0]);
-	$("#ac-input").val('');
+function PopulateResults(result) {
+	var title = result.raw;
 
 	$("#results_content").fadeTo(200, 0, function() {
-		$("#post_title").text(resultStrings[0]); // replace with what was selected
+		$("#post_title").text(title); // replace with what was selected
 		$("#results_content").fadeTo(200, 1);
+		$('#ac-input').blur();
 	});
 	
 }
