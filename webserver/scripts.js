@@ -8,6 +8,14 @@ $( document ).ready(function() {
 		}
 	});
 
+	$("#ac-input").focusin(function() {
+  		FadeInSearch();
+	});
+
+	$("#ac-input").focusout(function() {
+  		FadeOutSearch();
+	});
+
 });
 
 function IsShowingResults() {
@@ -37,9 +45,20 @@ function RepositionSearch() {
 }
 
 function PopulateResults() {
+	$('#ac-input').attr("placeholder", resultStrings[0]);
+	$("#ac-input").val('');
+
 	$("#results_content").fadeTo(200, 0, function() {
 		$("#post_title").text(resultStrings[0]); // replace with what was selected
 		$("#results_content").fadeTo(200, 1);
 	});
 	
+}
+
+function FadeInSearch() {
+	$( "#ac-input" ).css("color", "#000000");
+}
+
+function FadeOutSearch() {
+	$( "#ac-input" ).css("color" , "#CECECE");
 }

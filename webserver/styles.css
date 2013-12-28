@@ -72,3 +72,16 @@ body {
 	font-size: 2.5em;
 }
 
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #CECECE;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #CECECE;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #CECECE;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #CECECE;
+}
+
