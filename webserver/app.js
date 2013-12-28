@@ -317,14 +317,19 @@ io.sockets.on('connection', function (socket) {
 
     // TODO: sort these the array by the value in the objects
     var results = _.map(completed_word_ids, function(obj) {
+      /*
       var key = obj[0];
       var val = obj[1];
       // lookup the key and link
       var obj = {};
       obj[key] = val;
+      */
+      var key = obj[0];
+      var score = obj[1];
       // Temporary, for testing. Need to just return output after debug
       var output = dbIdToSubmissionInfo[key];
-      return [output[0] + " [SCORE: " + parseInt(val) + "]", output[1]];
+      output.push(score);
+      return output;
     });
     // console.log('Results: ' + JSON.stringify(results));
     results = results.slice(0, Math.min(7, results.length));  // max 7 results

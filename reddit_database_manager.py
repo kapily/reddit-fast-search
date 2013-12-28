@@ -18,9 +18,15 @@ class DatabaseManager:
     self.rows_written = 0
     self.new_rows_written = 0
     self.already_exist = 0
+    self.cursor = self.conn.cursor()
     if not database_exists:
       self.create_db()
     # At this point, the schema should be set-up
+
+  def __del__(self):
+    # Commit at the end because it's way faster that way
+    self.conn.commit()
+    pass
 
   def query(self, query):
     c = self.conn.cursor()
@@ -35,9 +41,9 @@ class DatabaseManager:
 
   def replace_submission(self, submission):
     """ This is a seprate function because this is dangerous"""
-    c = self.conn.cursor()
+    #c = self.conn.cursor()
     # print submission.to_tuple()
-    c.execute("INSERT OR REPLACE INTO submissions VALUES ("
+    self.cursor.execute("INSERT OR REPLACE INTO submissions VALUES ("
               "?, ?, ?, ?, ?, ?, ?, ?)",
               submission.to_tuple())
     self.conn.commit()
@@ -55,10 +61,10 @@ class DatabaseManager:
 
   def row_exists(self, row_id):
     assert(isinstance(row_id, int))
-    c = self.conn.cursor()
+    #c = self.conn.cursor()
     self.already_exist += 1
     # print "checking for row_id = ", row_id
-    c.execute("SELECT * FROM submissions where id = ?", (row_id,))
+    self.cursor.execute("SELECT * FROM submissions where id = ?", (row_id,))
     return c.fetchone() is not None
 
   def newest_from_subreddit(self, subreddit):
@@ -66,8 +72,8 @@ class DatabaseManager:
     pass
 
   def create_db(self):
-    c = self.conn.cursor()
-    c.execute("""
+    #c = self.conn.cursor()
+    self.cursor.execute("""
     CREATE TABLE "submissions" (
       "id" integer NOT NULL,
       "disabled" integer NOT NULL,

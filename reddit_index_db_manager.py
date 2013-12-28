@@ -16,6 +16,7 @@ class IndexDatabaseManager:
     self.rows_written = 0
     self.new_rows_written = 0
     self.already_exist = 0
+    self.cursor = self.conn.cursor()
     if not database_exists:
       self.create_db()
     # At this point, the schema should be set-up
@@ -26,16 +27,16 @@ class IndexDatabaseManager:
     pass
 
   def query(self, query):
-    c = self.conn.cursor()
+    # c = self.conn.cursor()
     # print "query: ", query
     try:
-      c.execute(query)
+      self.cursor.execute(query)
     except:
       print "Bad query: ", query
       exit(1)
     # return c.fetchall()
     while True:
-      rows = c.fetchmany()
+      rows = self.cursor.fetchmany()
       if not rows:
         break
       for row in rows:
@@ -55,8 +56,8 @@ class IndexDatabaseManager:
 
   def replace_submission(self, word, submission_ids):
     """ This is a seprate function because this is dangerous"""
-    c = self.conn.cursor()
-    c.execute("INSERT OR REPLACE INTO reddit_index VALUES ("
+    # c = self.conn.cursor()
+    self.cursor.execute("INSERT OR REPLACE INTO reddit_index VALUES ("
               "?, ?)",
               (word, submission_ids))
     # self.conn.commit()
@@ -81,13 +82,13 @@ class IndexDatabaseManager:
 
   def row_exists(self, word):
     assert(isinstance(word, basestring))
-    c = self.conn.cursor()
-    c.execute("SELECT * FROM reddit_index where word = ?", (word,))
-    return c.fetchone() is not None
+    #c = self.conn.cursor()
+    self.cursor.execute("SELECT * FROM reddit_index where word = ?", (word,))
+    return self.cursor.fetchone() is not None
 
   def create_db(self):
-    c = self.conn.cursor()
-    c.execute("""
+    #c = self.conn.cursor()
+    self.cursor.execute("""
     CREATE TABLE "reddit_index" (
       "word" text NOT NULL,
       "submission_ids" text NOT NULL,
