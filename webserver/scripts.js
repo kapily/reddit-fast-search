@@ -77,7 +77,7 @@ function IsShowingResults() {
 }
 
 function OpenResult(resultTitle, resultURL) {
-	$('#ac-input').attr("placeholder", resultTitle);
+	$('#ac-input').attr("placeholder", "");
 	setTimeout(function (){
              $("#ac-input").val('');
     }, 20);
