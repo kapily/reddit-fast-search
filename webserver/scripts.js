@@ -32,9 +32,15 @@ function OpenResult(resultTitle, resultURL) {
 
 
 function RepositionSearch() {
+	$("#tagline").fadeTo(200, 0);
+
 	// Bump search up
 	$("#search_content").animate({ 
         top: "-=15%",
+    }, 120);
+
+    $("#logo_center").animate({ 
+        marginBottom: "-15px",
     }, 120);
 
     searchRepositioned = true;
