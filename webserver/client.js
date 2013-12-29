@@ -74,8 +74,8 @@ $(document).ready(function() {
       activateFirstItem: true,
       on               : {
         select  :  function(e) {
-          console.log("e is:" + JSON.stringify(e.result.raw));
-          ShowResults(e.result); // call to front-end scripts.js
+          //console.log("e is:" + JSON.stringify(titleToUrl[e.result.raw]));
+          ShowResults(e.result.raw, titleToUrl[e.result.raw]); // call to front-end scripts.js
         }
       },
       source           : function (query, callback) {

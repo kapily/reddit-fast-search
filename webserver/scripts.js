@@ -16,8 +16,8 @@ function IsShowingResults() {
 	return searchRepositioned;
 }
 
-function ShowResults(result) {
-	PopulateResults(result);
+function ShowResults(resultTitle, resultURL) {
+	PopulateResults(resultTitle, resultURL);
 	if(!IsShowingResults()) RepositionSearch();
 }
 
@@ -42,11 +42,10 @@ function RepositionSearch() {
     searchRepositioned = true;
 }
 
-function PopulateResults(result) {
-	var title = result.raw;
+function PopulateResults(title, url) {
 
 	$("#title_content").fadeTo(200, 0, function() {
-		$("#link").attr("href", "http://www.google.com/")
+		$("#link").attr("href", url)
 		$("#post_title").text(title);
 		$("#title_content").fadeTo(200, 1);
 		
