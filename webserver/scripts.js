@@ -2,6 +2,12 @@ var searchRepositioned = false;
 
 $( document ).ready(function() {
 
+	$('#ac-input').bind('input', function() { 
+    	if(!searchRepositioned) {
+    		RepositionSearch();
+    	}
+	});
+
 	$("#ac-input").focusin(function() {
   		FadeInSearch();
 	});
@@ -16,28 +22,20 @@ function IsShowingResults() {
 	return searchRepositioned;
 }
 
-function ShowResults(resultTitle, resultURL) {
-	PopulateResults(resultTitle, resultURL);
-	if(!IsShowingResults()) RepositionSearch();
+function OpenResult(resultTitle, resultURL) {
+	$('#ac-input').attr("placeholder", resultTitle);
+	setTimeout(function (){
+             $("#ac-input").val('');
+    }, 20);
+    window.open(resultURL);
 }
 
-function RepositionSearch() {
-	// Fade out logo
-	$( "#logo_center" ).fadeTo(100 , 0, function() {
-		$("#logo_center").css("visibility","hidden");
-	});
-	
-	// Move search to top
-	$("#search_content").animate({ 
-        top: "-40px",
-    }, 120, function() {
-    	$("#title_content").css("display", "block");
-    	$("#title_content").fadeTo(200, 1);
 
-    	// Create border
-    	$("#search_content").css("background-color", "#21252E");
-    	$("#search_content").css("padding-bottom", "40px");
-    } );
+function RepositionSearch() {
+	// Bump search up
+	$("#search_content").animate({ 
+        top: "-=15%",
+    }, 120);
 
     searchRepositioned = true;
 }
@@ -64,3 +62,31 @@ function FadeInSearch() {
 function FadeOutSearch() {
 	$( "#ac-input" ).css("color" , "#CECECE");
 }
+
+/*
+function ShowResults(resultTitle, resultURL) {
+	PopulateResults(resultTitle, resultURL);
+	if(!IsShowingResults()) RepositionSearch();
+}
+
+function RepositionSearch() {
+	// Fade out logo
+	$( "#logo_center" ).fadeTo(100 , 0, function() {
+		$("#logo_center").css("visibility","hidden");
+	});
+	
+	// Move search to top
+	$("#search_content").animate({ 
+        top: "-40px",
+    }, 120, function() {
+    	$("#title_content").css("display", "block");
+    	$("#title_content").fadeTo(200, 1);
+
+    	// Create border
+    	$("#search_content").css("background-color", "#21252E");
+    	$("#search_content").css("padding-bottom", "40px");
+    } );
+
+    searchRepositioned = true;
+}
+*/

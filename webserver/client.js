@@ -108,7 +108,8 @@ $(document).ready(function() {
       on               : {
         select  :  function(e) {
           //console.log("e is:" + JSON.stringify(titleToUrl[e.result.raw]));
-          ShowResults(e.result.raw, titleToUrl[e.result.raw]); // call to front-end scripts.js
+          //ShowResults(e.result.raw, titleToUrl[e.result.raw]); // call to front-end scripts.js
+          OpenResult(e.result.raw, titleToUrl[e.result.raw]);
 
         }
       },
