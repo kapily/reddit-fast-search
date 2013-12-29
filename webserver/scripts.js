@@ -51,7 +51,9 @@ function PrepareSuggestions() {
         			"Crafts",
         			"Brewing Beer",
         			"Astronomy",
-        			"Super Collider"
+        			"Super Collider",
+        			"Green Tea",
+        			"San Francisco"
         			];
     shuffle(suggestions);
     suggestions.push("");
@@ -70,6 +72,7 @@ function UpdatePlaceholder() {
 
 function StopUpdatingPlaceholder() {
 	clearInterval(typingIntervalId);
+	$('#ac-input').attr("placeholder", "");
 }
 
 function IsShowingResults() {
