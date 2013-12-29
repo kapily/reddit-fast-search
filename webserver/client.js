@@ -114,6 +114,7 @@ $(document).ready(function() {
         }
       },
       source           : function (query, callback) {
+        query = query.toLowerCase();
         // console.log("Source is being called.");
 
 
