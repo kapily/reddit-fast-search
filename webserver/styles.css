@@ -108,6 +108,10 @@ body {
 	margin-top: 40px;
 }
 
+#sample_text {
+	visibility: hidden;
+}
+
 .comment_area {
 	/*background-color: #086496;
 	color:#FFF;

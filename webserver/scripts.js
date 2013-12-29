@@ -1,9 +1,26 @@
 var searchRepositioned = false;
+var sampleText;
+var typingIntervalId;
 
 $( document ).ready(function() {
+    
+	// Sample text updater:
+	$(function(){
+      $("#sample_text").typed({
+        strings: ["First sentence.", "Second sentence."],
+        typeSpeed: 0
+      });
+  	});
 
+	// Set sample text as placeholder:
+  	typingIntervalId = setInterval(function () {
+		UpdatePlaceholder();
+    }, 10);
+
+  	// User input listener
 	$('#ac-input').bind('input', function() { 
     	if(!searchRepositioned) {
+    		clearInterval(typingIntervalId);
     		RepositionSearch();
     	}
 	});
@@ -17,6 +34,12 @@ $( document ).ready(function() {
 	});
 
 });
+
+function UpdatePlaceholder() {
+	sampleText = $("#sample_text").text();
+	console.log("set to " + sampleText)
+	$('#ac-input').attr("placeholder", sampleText);
+}
 
 function IsShowingResults() {
 	return searchRepositioned;
