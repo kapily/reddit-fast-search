@@ -241,6 +241,16 @@ io.sockets.on('connection', function (socket) {
   // socket.emit('news', { hello: 'world' });
 
   socket.on('user_query_changed', function (data) {
+
+    console.log("Results for a: ");
+    console.log(dbTrie.autoComplete("a"));
+    console.log("Results for ap: ");
+    console.log(dbTrie.autoComplete("ap"));
+    console.log("Results for appl: ");
+    console.log(dbTrie.autoComplete("appl"));
+
+    return;
+
     // Handle the new user query
     // console.log(data);
     var query = data.query;
@@ -382,9 +392,10 @@ io.sockets.on('connection', function (socket) {
     if (complete_results) {
       if (results.length > MAX_RESULTS_TO_CACHE) {
         // If result size is too large, just return RESULT_LIMIT_SIZE
+        // NOTE: this assumes that MAX_RESULTS_TO_CACHE > RESULT_LIMIT_SIZE
         complete_results = false;
         console.log("Results were sized: " + results.length + " so truncating them.");
-        results = results.slice(0, Math.min(RESULT_LIMIT_SIZE, results.length));
+        results = results.slice(0, RESULT_LIMIT_SIZE);
 
       }
     }
