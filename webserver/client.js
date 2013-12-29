@@ -52,7 +52,7 @@ $(document).ready(function() {
     }
 
     if (data.complete_results) {
-      console.log("Complete results: " + JSON.stringify(data));
+      // console.log("Complete results: " + JSON.stringify(data));
       // Set the cache
       // Split up query into complete and incomplete words
       /* Begin code that must be moved to a function */
@@ -69,12 +69,12 @@ $(document).ready(function() {
       var completed_words_str = completed_words.join(' ');
       /* End code that must be moved to a function */
 
-
+      console.log("Putting: " + completed_words_str + " in cache.");
       locache.set(completed_words_str, data.results);
     }
 
 
-    console.log("Setting new results.");
+    // console.log("Setting new results.");
     //var anotherResultString = [];
     resultStrings = result_strings_from_result_and_set_titleToUrl(data.results);
 
@@ -107,12 +107,12 @@ $(document).ready(function() {
       activateFirstItem: true,
       on               : {
         select  :  function(e) {
-          console.log("e is:" + JSON.stringify(e.result.raw));
+          // console.log("e is:" + JSON.stringify(e.result.raw));
           ShowResults(e.result); // call to front-end scripts.js
         }
       },
       source           : function (query, callback) {
-        console.log("Source is being called.");
+        // console.log("Source is being called.");
 
 
 
