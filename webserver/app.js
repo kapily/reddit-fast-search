@@ -17,7 +17,7 @@ var sqlite3 = require('sqlite3').verbose();
 // var Triejs = require('triejs');
 var _ = require('lodash');
 
-
+var MAX_RESULTS_TO_CACHE = 500;
 
 // Hack to include trie for now
 // http://stackoverflow.com/questions/5797852/in-node-js-how-do-i-include-functions-from-my-other-files
@@ -252,6 +252,7 @@ io.sockets.on('connection', function (socket) {
     if (!query || query == "") {
       return;
     }
+
     var completed_words = query.split(" ");
     var incomplete_word = null;
     var last_character = query.slice(-1);
@@ -278,42 +279,64 @@ io.sockets.on('connection', function (socket) {
       }
       // console.log("Completed word is not empty.");
     }
-    console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
+    // console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
 
 
+    // complete_results = true means all possible results are included
+    var complete_results = true;
 
+    // Basically once the completed_word_ids size is too small, there should be better ways to
+    // search through the database
+    // Example Query:  what,do,you,think
+    // Takes a long while to actually resolve
+    // Solution: try to manually search through the entries of the query to see which ones contain it
+
+    // The length > RESULT_LIMIT_SIZE is an optimization to reduce the number of look-ups we need to do
     if (incomplete_word) {
-      //console.log("Before incomplete word, completed_word_ids = " + JSON.stringify(completed_word_ids));
-      // Modify the results
-      // Get a list of the possible words it could be
-      // var possible_words = dbTrie.find(incomplete_word);
-      console.log("Trying to get possible_words.");
-      var possible_words = dbTrie.autoComplete(incomplete_word);
-      // TODO: LOTS of room for improvement. Do NOT need to traverse the entire list of possible_words
-      console.log("Got possible_words.");
+      if (completed_word_ids && completed_word_ids.length <= MAX_RESULTS_TO_CACHE) {
+        // We send back the massive results
+        // Two things we can:
+        // - Actually search through the completed_word_ids rather than trying to do set intersections
+        // - Send a large result back to the user
+        // -
 
-
-      // console.log("possible words: " + JSON.stringify(possible_words));
-      var possible_suggestions = [];
-      console.log("Trying to get possible_suggestions.");
-      for (var j = 0; j < possible_words.length; j++) {
-        var possible_word = possible_words[j];
-        // _.each(possible_words, function(possible_word){
-        // We insert into sorted order each time
-        possible_suggestions = ExtendSortedArrays(dbWordToIdObj[possible_word], possible_suggestions);
-        var current_solutions = IntersectSortedArrays(completed_word_ids, possible_suggestions, Infinity);
-        if (current_solutions.length >= RESULT_LIMIT_SIZE) {
-          break;
-        }
-        // _.extend(possible_suggestions, dbWordToIdObj[possible_word])
       }
-      console.log("Got possible_suggestions.");
-      // TODO: BUgs abound. Results are NOT unique
-      // console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
-      // console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
+      else {
+        // once we are check for partial matches, complete_results will become false. Future area of optimization
+        complete_results = false;
 
-      completed_word_ids = IntersectSortedArrays(completed_word_ids, possible_suggestions, Infinity);
-      // console.log("After Intersection = " + JSON.stringify(completed_word_ids));
+        //console.log("Before incomplete word, completed_word_ids = " + JSON.stringify(completed_word_ids));
+        // Modify the results
+        // Get a list of the possible words it could be
+        // var possible_words = dbTrie.find(incomplete_word);
+        //console.log("Trying to get possible_words.");
+        var possible_words = dbTrie.autoComplete(incomplete_word);
+        // TODO: LOTS of room for improvement. Do NOT need to traverse the entire list of possible_words
+        //console.log("Got possible_words.");
+
+
+        // console.log("possible words: " + JSON.stringify(possible_words));
+        var possible_suggestions = [];
+        //console.log("Trying to get possible_suggestions.");
+        for (var j = 0; j < possible_words.length; j++) {
+          var possible_word = possible_words[j];
+          // _.each(possible_words, function(possible_word){
+          // We insert into sorted order each time
+          possible_suggestions = ExtendSortedArrays(dbWordToIdObj[possible_word], possible_suggestions);
+          var current_solutions = IntersectSortedArrays(completed_word_ids, possible_suggestions, RESULT_LIMIT_SIZE);
+          if (current_solutions.length >= RESULT_LIMIT_SIZE) {
+            break;
+          }
+          // _.extend(possible_suggestions, dbWordToIdObj[possible_word])
+        }
+        //console.log("Got possible_suggestions.");
+        // TODO: BUgs abound. Results are NOT unique
+        // console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
+        // console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
+
+        completed_word_ids = IntersectSortedArrays(completed_word_ids, possible_suggestions, RESULT_LIMIT_SIZE);
+        // console.log("After Intersection = " + JSON.stringify(completed_word_ids));
+      }
     }
 
     /*
@@ -353,8 +376,20 @@ io.sockets.on('connection', function (socket) {
       return resultsObj;
     });
     // console.log('Results: ' + JSON.stringify(results));
-    results = results.slice(0, Math.min(7, results.length));  // max 7 results
-    console.log('Results (limited to 7) : ' + JSON.stringify(results));
+    // results = results.slice(0, Math.min(RESULT_LIMIT_SIZE, results.length));  // max 7 results
+
+    // Make sure the complete results are not too large
+    if (complete_results) {
+      if (results.length > MAX_RESULTS_TO_CACHE) {
+        // If result size is too large, just return RESULT_LIMIT_SIZE
+        complete_results = false;
+        console.log("Results were sized: " + results.length + " so truncating them.");
+        results = results.slice(0, Math.min(RESULT_LIMIT_SIZE, results.length));
+
+      }
+    }
+    console.log("Sending back results sized: " + results.length);
+    // console.log('Results (limited to 7) : ' + JSON.stringify(results));
     // TODO: need to sort the results based on the score of the objects
     // TODO: need to limit results to 5 or so
 
@@ -367,7 +402,7 @@ io.sockets.on('connection', function (socket) {
 
 
     console.log("--------------------------------------------------------------------");
-    socket.emit('new_search_results', { query: query, results: results});
+    socket.emit('new_search_results', { query: query, complete_results: complete_results, results: results});
 
     /*
     // TODO: only send a few results back
