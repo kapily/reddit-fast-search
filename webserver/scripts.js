@@ -7,8 +7,18 @@ $( document ).ready(function() {
 	// Sample text updater:
 	$(function(){
       $("#sample_text").typed({
-        strings: ["First sentence.", "Second sentence."],
-        typeSpeed: 0
+        strings: [	"Obama", 
+        			"DIY",
+        			"Best stories",
+        			"Why do cats like boxes?",
+        			"Apple CEO",
+        			" "
+        			],
+        typeSpeed: 5,
+        backDelay: 1000,
+        callback: function(){ 
+        	StopUpdatingPlaceholder();
+        }
       });
   	});
 
@@ -20,8 +30,8 @@ $( document ).ready(function() {
   	// User input listener
 	$('#ac-input').bind('input', function() { 
     	if(!searchRepositioned) {
-    		clearInterval(typingIntervalId);
     		RepositionSearch();
+    		StopUpdatingPlaceholder();
     	}
 	});
 
@@ -37,8 +47,12 @@ $( document ).ready(function() {
 
 function UpdatePlaceholder() {
 	sampleText = $("#sample_text").text();
-	console.log("set to " + sampleText)
+	//console.log("set to " + sampleText)
 	$('#ac-input').attr("placeholder", sampleText);
+}
+
+function StopUpdatingPlaceholder() {
+	clearInterval(typingIntervalId);
 }
 
 function IsShowingResults() {
