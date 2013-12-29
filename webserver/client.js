@@ -107,13 +107,9 @@ $(document).ready(function() {
       activateFirstItem: true,
       on               : {
         select  :  function(e) {
-<<<<<<< HEAD
           //console.log("e is:" + JSON.stringify(titleToUrl[e.result.raw]));
           ShowResults(e.result.raw, titleToUrl[e.result.raw]); // call to front-end scripts.js
-=======
-          // console.log("e is:" + JSON.stringify(e.result.raw));
-          ShowResults(e.result); // call to front-end scripts.js
->>>>>>> 7005e6f1895411f99a479761c3e563e65d6d1af9
+
         }
       },
       source           : function (query, callback) {
