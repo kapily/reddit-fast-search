@@ -31,8 +31,8 @@ function RepositionSearch() {
 	$("#search_content").animate({ 
         top: "-40px",
     }, 120, function() {
-    	$("#results_content").css("display", "block");
-    	$("#results_content").fadeTo(200, 1);
+    	$("#title_content").css("display", "block");
+    	$("#title_content").fadeTo(200, 1);
 
     	// Create border
     	$("#search_content").css("background-color", "#21252E");
@@ -45,9 +45,10 @@ function RepositionSearch() {
 function PopulateResults(result) {
 	var title = result.raw;
 
-	$("#results_content").fadeTo(200, 0, function() {
+	$("#title_content").fadeTo(200, 0, function() {
+		$("#link").attr("href", "http://www.google.com/")
 		$("#post_title").text(title);
-		$("#results_content").fadeTo(200, 1);
+		$("#title_content").fadeTo(200, 1);
 		
 		// Swith input to Placeholder
 		$('#ac-input').attr("placeholder", title);

@@ -43,7 +43,7 @@ body {
 	padding-bottom: 40px;
 }
 
-#content {
+#reddit_content {
 	width:70%;
 	margin-left: 15%;
 	margin-right: 15%;
@@ -56,7 +56,7 @@ body {
 	width:100%;
 }
 
-#results_content {
+#title_content {
 	position: relative;
 	top:0px;
 	height:100%;
@@ -84,6 +84,15 @@ body {
 #post_title {
 	font-family: 'Lato', sans-serif;
 	font-size: 3em;
+}
+
+#link {
+	font-family: 'Lato', sans-serif;
+	font-size: 1em;
+}
+
+#frame_content {
+	margin-top: 40px;
 }
 
 .comment_area {

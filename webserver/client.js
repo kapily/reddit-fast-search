@@ -71,7 +71,7 @@ $(document).ready(function() {
       activateFirstItem: true,
       on               : {
         select  :  function(e) {
-          //console.log("e is:" + JSON.stringify(e.result));
+          console.log("e is:" + JSON.stringify(e.result.raw));
           ShowResults(e.result); // call to front-end scripts.js
         }
       },
