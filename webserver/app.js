@@ -4,7 +4,12 @@
 // Possible optimizations:
 // - make the trie client-side
 // - use an in-memory sqlite table
-
+/*
+require('nodetime').profile({
+  accountKey: '5224aeaeed90bee3a191c1232596a0aac2f858ca',
+  appName: 'Reddex'
+});
+*/
 // Includes
 var io = require('socket.io').listen(8080);
 io.set('log level', 1); // reduce logging
@@ -273,6 +278,7 @@ io.sockets.on('connection', function (socket) {
       }
       // console.log("Completed word is not empty.");
     }
+    console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
 
 
 
@@ -302,6 +308,7 @@ io.sockets.on('connection', function (socket) {
         // _.extend(possible_suggestions, dbWordToIdObj[possible_word])
       }
       console.log("Got possible_suggestions.");
+      // TODO: BUgs abound. Results are NOT unique
       // console.log("possible suggestions: " + JSON.stringify(possible_suggestions));
       // console.log("completed_word_ids: " + JSON.stringify(completed_word_ids));
 
@@ -334,12 +341,16 @@ io.sockets.on('connection', function (socket) {
       var obj = {};
       obj[key] = val;
       */
+
       var key = obj[0];
       var score = obj[1];
       // Temporary, for testing. Need to just return output after debug
       var output = dbIdToSubmissionInfo[key];
-      output.push(score);
-      return output;
+      var title = output[0];
+      var url = output[1];
+
+      var resultsObj = [title, url, score];
+      return resultsObj;
     });
     // console.log('Results: ' + JSON.stringify(results));
     results = results.slice(0, Math.min(7, results.length));  // max 7 results
