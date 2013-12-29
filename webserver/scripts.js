@@ -1,19 +1,16 @@
 var searchRepositioned = false;
 var sampleText;
 var typingIntervalId;
+var suggestions;
 
 $( document ).ready(function() {
     
+    PrepareSuggestions();
+	
 	// Sample text updater:
 	$(function(){
       $("#sample_text").typed({
-        strings: [	"Obama", 
-        			"DIY",
-        			"Best stories",
-        			"Why do cats like boxes?",
-        			"Apple CEO",
-        			" "
-        			],
+        strings: suggestions,
         typeSpeed: 5,
         backDelay: 1000,
         callback: function(){ 
@@ -44,6 +41,26 @@ $( document ).ready(function() {
 	});
 
 });
+
+function PrepareSuggestions() {
+	suggestions = [ "Obama", 
+        			"DIY",
+        			"Best stories",
+        			"Why do cats like boxes?",
+        			"Apple CEO",
+        			"Crafts",
+        			"Brewing Beer",
+        			"Astronomy",
+        			"Super Collider"
+        			];
+    shuffle(suggestions);
+    suggestions.push("");
+}
+
+function shuffle(o){ // Shuffle function courtesy Google
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
 
 function UpdatePlaceholder() {
 	sampleText = $("#sample_text").text();
