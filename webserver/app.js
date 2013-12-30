@@ -54,7 +54,7 @@ db.serialize(function() {
     var submissionIdObj = JSON.parse(row.submission_ids);
     dbWordToIdObj[row.word] = submissionIdObj;
   });
-  console.log("Finished processing dbWordToIdObj.");
+  //console.log("Finished processing dbWordToIdObj.");
 });
 db.close();
 
@@ -68,7 +68,7 @@ db.serialize(function() {
     dbIdToSubmissionInfo[id] = [title, url];
     // console.log("Row id:" + id + " has title: " + title);
   });
-  console.log("Finished processing dbIdToSubmissionInfo.");
+  //console.log("Finished processing dbIdToSubmissionInfo.");
 });
 db.close();
 
@@ -258,7 +258,7 @@ io.sockets.on('connection', function (socket) {
     // console.log(data);
     var query = data.query;
 
-    console.log("--------------------------------------------------------------------");
+    //console.log("--------------------------------------------------------------------");
     // console.log("Received query: " + query);
 
     // split the query into completed words and incomplete word
@@ -277,8 +277,8 @@ io.sockets.on('connection', function (socket) {
       completed_words.pop();
     }
 
-    console.log("Completed word: " + completed_words);
-    console.log("Incomplete word: " + incomplete_word);
+    //console.log("Completed word: " + completed_words);
+    //console.log("Incomplete word: " + incomplete_word);
 
     // TODO: Get all of the
     var completed_word_ids = null;

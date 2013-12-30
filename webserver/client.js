@@ -40,7 +40,7 @@ $(document).ready(function() {
   // Initialize typeahead
   // $('.typeahead').typeahead();
 
-  var socket = io.connect('http://localhost:8080');
+  var socket = io.connect('http://redditinstant.com:8080');
   socket.on('new_search_results', function (data) {
     // console.log("Received search results! ");
     // also check data.query to see what the original query was for
