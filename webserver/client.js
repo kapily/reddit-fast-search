@@ -42,7 +42,7 @@ $(document).ready(function() {
 
   var socket = io.connect('http://localhost:8080');
   socket.on('new_search_results', function (data) {
-    console.log("Received search results! ");
+    // console.log("Received search results! ");
     // also check data.query to see what the original query was for
     // console.log(data.results);
 
@@ -69,7 +69,7 @@ $(document).ready(function() {
       var completed_words_str = completed_words.join(' ');
       /* End code that must be moved to a function */
 
-      console.log("Putting: " + completed_words_str + " in cache.");
+      // console.log("Putting: " + completed_words_str + " in cache.");
       locache.set(completed_words_str, data.results);
     }
 
@@ -139,7 +139,7 @@ $(document).ready(function() {
           possible_completed_strings.push(so_far.join(' '));
         }
         // var completed_words_str = completed_words.join(' ');
-        console.log("possible things in cache: " + possible_completed_strings);
+        // console.log("possible things in cache: " + possible_completed_strings);
         var cached_val = null;
         for (var j = 0; j < possible_completed_strings.length; j++) {
           // lookup possible_completed_strings[j] in cache
@@ -158,7 +158,7 @@ $(document).ready(function() {
 
 
         if (cached_val) {
-          console.log("Object in cache!");
+          // console.log("Object in cache!");
           // console.log("cached_val: " + JSON.stringify(cached_val));
           resultStrings = result_strings_from_result_and_set_titleToUrl(cached_val);
           // console.log("resultStrings: " + JSON.stringify(resultStrings));
