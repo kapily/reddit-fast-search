@@ -5,6 +5,7 @@ var suggestions;
 var searchBox;
 
 $( document ).ready(function() {
+	searchBox = $("#ac-input");
     PrepareSuggestions();
 	
 	// sampleText updater:
@@ -25,7 +26,7 @@ $( document ).ready(function() {
     }, 10);
 
   	// User input listener
-	$('#ac-input').bind('input', function() {
+	searchBox.bind('input', function() {
     	RepositionSearch();
     	StopUpdatingPlaceholder();
 	});
@@ -38,18 +39,18 @@ function shuffle(o){ // Shuffle function courtesy Google
 
 function UpdatePlaceholder() {
 	sampleText = $("#sample_text").text();
-	$('#ac-input').attr("placeholder", sampleText);
+	searchBox.attr("placeholder", sampleText);
 }
 
 function StopUpdatingPlaceholder() {
 	clearInterval(typingIntervalId);
-	$('#ac-input').attr("placeholder", "");
+	searchBox.attr("placeholder", "");
 }
 
 function OpenResult(resultTitle, resultURL) {
-	$('#ac-input').attr("placeholder", "");
+	searchBox.attr("placeholder", "");
 	setTimeout(function (){
-             $("#ac-input").val('');
+             searchBox.val('');
              RepositionSearch();
     }, 20);
     window.open(resultURL);
@@ -72,15 +73,10 @@ function RepositionSearch() {
 
 	else if(searchPosition == "top" && SearchIsEmpty()) {
 		searchPosition = "center";
-		//$("#tagline").fadeTo(200, 0);
 
 		// Bump search down
 		$("#search_content").animate({ 
 	        top: "30%",
-	    }, 120);
-
-	    $("#logo_center").animate({ 
-	        marginBottom: "+=15px",
 	    }, 120);
 	}
 }
