@@ -242,14 +242,17 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('user_query_changed', function (data) {
 
-    console.log("Results for a: ");
-    console.log(dbTrie.autoComplete("a"));
-    console.log("Results for ap: ");
-    console.log(dbTrie.autoComplete("ap"));
+    /*
+    //console.log("Results for a: ");
+    //console.log(dbTrie.autoComplete("a"));
+    //console.log("Results for ap: ");
+    //console.log(dbTrie.autoComplete("ap"));
     console.log("Results for appl: ");
     console.log(dbTrie.autoComplete("appl"));
-
     return;
+    */
+
+
 
     // Handle the new user query
     // console.log(data);

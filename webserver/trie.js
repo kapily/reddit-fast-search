@@ -246,25 +246,34 @@ Trie.prototype = {
     * @return {Array} Array of possible suggestions
     */
     autoComplete: function(str, pos) {
-        if(str.length == 0) {
-            return [];
-        }
-        
-        var T = this,
-            k,
-            child;
-        
-        if(pos === undefined) {
-            pos = 0;
-        }   
-        k = str[pos];
-        child = T.children[k];
-        if(child === undefined) { //node doesn't exist
-            return [];
-        }
-        if(pos === str.length - 1) {
-            return child.getAllWords(str);
-        }
-        return child.autoComplete(str, pos + 1);
+        // TODO: make this function iterative so you can use yield with a generator
+        //console.log("autoComplete called with str = " + str + " and pos= " + pos);
+
+        //for (var pos = 0; pos < str.length; pos++){
+            if(str.length == 0) {
+                return [];
+            }
+
+            var T = this,
+                k,
+                child;
+
+            if(pos === undefined) {
+                pos = 0;
+            }
+            k = str[pos];
+            //console.log("k: " + k);
+            child = T.children[k];
+            if(child === undefined) { //node doesn't exist
+                return [];
+            }
+            if(pos === str.length - 1) {
+                //console.log("Calling getAllWords with str = " + str);
+                //console.log("child.words: " + child.words + "child.prefixes: " + child.prefixes + "child.children.length: " + child.children.length);
+                return child.getAllWords(str);
+            }
+            //console.log("Calling autoComplete with str = " + str + " and pos = " + (pos+1));
+            return child.autoComplete(str, pos + 1);
+        //}
     }
 };
